@@ -1,0 +1,16 @@
+{
+  "name": "platin-server-center-gui",
+  "private": true,
+  "dependencies": {
+    "jquery": "1.x",
+    "bootstrap": "3.x",
+    "fontawesome": "x",
+    "angular": "1.3.x",
+    "angular-resource": "1.3.x",
+    "angular-animate": "1.3.x",
+    "animate.css": "3.x",
+    "underscore": "1.x",
+    "moment": "2.x",
+    "bootstrap-sweetalert": "x"
+  }
+}

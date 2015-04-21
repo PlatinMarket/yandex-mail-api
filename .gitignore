@@ -1,0 +1,10 @@
+Vendor/
+logs/*
+!.gitkeep
+node_modules/
+tmp
+.idea
+.DS_Store
+password_file.dat
+components/
+config.php
