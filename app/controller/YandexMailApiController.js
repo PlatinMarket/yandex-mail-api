@@ -16,11 +16,9 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
   $scope.selectDomain = function(domain) {
     if ($scope.domain != null && $scope.domain.name == domain.name) return;
     $scope.domain = domain;
-    domain.queue = 3;
-    domain.logo_url = undefined;
-    YandexMailApiService.get_domain_registration_status({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.status = result;});
-    YandexMailApiService.get_domain_details({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.details = result;});
-    YandexMailApiService.get_domain_logo({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.logo_url = result["logo-url"]; });
+    domain.queue = 2;
+    YandexMailApiService.get_domain_registration_status({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.remote_status = result;});
+    YandexMailApiService.get_domain_details({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.remote_details = result;});
   };
 
   function getDomains(page, on_page) {

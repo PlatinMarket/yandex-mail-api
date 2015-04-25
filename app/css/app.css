@@ -1,0 +1,18 @@
+.container{
+  margin-top:15px;
+}
+
+.domains{
+  max-height:410px;
+  overflow-y:auto; 
+}
+
+.badge.badge-danger{
+  background-color: #d9534f;
+  font-weight: normal;
+}
+
+.media-object.thumbnail{
+  width:80px;
+  height:80px;
+}

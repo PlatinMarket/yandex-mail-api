@@ -23,6 +23,7 @@
     <script src="components/moment/min/moment-with-locales.min.js"></script>
     <script src="components/underscore/underscore-min.js"></script>
     <script src="components/bootstrap-sweetalert/lib/sweet-alert.js"></script>
+    <script src="components/holderjs/holder.min.js"></script>
 
     <!--App Logic-->
     <script src="js/app.js"></script>
@@ -42,19 +43,53 @@
   <body>
     <div class="container" ng-controller="YandexMailApiController">
       <div class="row">
-        <div class="col-xs-3">
-            <input ng-model="domain_name" placeholder="Ara..." />
-            <i class="fa fa-spinner fa-spin" ng-show="domainsLoading"></i>
-            <ul>
-                <li ng-repeat="domain in domains | filter:domain_name:strict">
-                    <a href ng-click="selectDomain(domain)"><span ng-bind-html="highlight(domain.name, domain_name)">{{domain.name}}</span></a>
-                </li>
-            </ul>
+        <div class="col-xs-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Alan adları <span class="badge pull-right">{{domains.length}}</span> <i class="fa fa-refresh fa-spin" ng-show="domainsLoading"></i>
+                </div>
+                <div class="panel-body">
+                    <input type="search" class="form-control" ng-model="domain_name" placeholder="Ara..." />
+                </div>
+                <div class="list-group domains">
+                    <a href class="list-group-item" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === '')}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">
+                        <span ng-bind-html="highlight(domain.name, domain_name)">{{domain.name}} </span>
+                        <span class="badge">{{domain['emails-count']}}</span>
+                        <span class="badge badge-danger" ng-show="domain.status != 'added'">MX</span>
+                        <span class="badge badge-danger" ng-show="domain.stage != 'added'"><i class="fa fa-user"></i></span>
+                        <span class="badge badge-danger" ng-show="domain.logo_url === ''"><i class="fa fa-picture-o"></i></span>
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Eklemek için alan adı yazın..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button"><i class="fa fa-arrow-right"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-xs-9" ng-show="domain">
-            <img ng-src="{{domain.logo_url}}" err-src="http://google.com/favicon.ico" ng-hide="domain.queue > 0"/>
-            {{domain.name}}
-            <i class="fa fa-spinner fa-spin" ng-show="domain.queue > 0"></i>
+        <div class="col-xs-8">
+            <div class="panel panel-default" ng-show="domain">
+                <div class="panel-heading">
+                    Alan adı bilgileri <i class="fa fa-refresh fa-spin" ng-show="domain.queue > 0"></i>
+                </div>
+                <div class="panel-body">
+                <div class="media">
+                  <div class="media-left">
+                    <img class="media-object thumbnail" ng-show="domain.logo_url != ''" ng-src="{{domain.logo_url}}" />
+                    <img class="media-object thumbnail" ng-hide="domain.logo_url != ''" data-src="holder.js/80x80/text:Logo Yok" />
+                
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">{{domain.name}}</h4>
+                    ...
+                  </div>
+                </div>
+                    
+                </div>
+            </div>
         </div>
       </div>
     </div>
