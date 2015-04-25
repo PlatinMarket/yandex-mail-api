@@ -53,6 +53,8 @@
                 </div>
                 <div class="list-group domains">
                     <a href class="list-group-item" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === '')}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">
+                        <span ng-bind-html="highlight(domain.name, domain_name)">{{domain.name}}</span>
+                        <i class="fa fa-lock" ng-show="domain.master_admin"></i>
                         <span class="badge">{{domain['emails-count']}}</span>
                         <span class="badge badge-danger" ng-show="domain.status != 'added'">MX</span>
                         <span class="badge badge-danger" ng-show="domain.stage != 'added'"><i class="fa fa-user"></i></span>
@@ -75,18 +77,39 @@
                     Alan adı bilgileri <i class="fa fa-refresh fa-spin" ng-show="domain.queue > 0"></i>
                 </div>
                 <div class="panel-body">
-                <div class="media">
-                  <div class="media-left">
-                    <img class="media-object thumbnail" ng-show="domain.logo_url != ''" ng-src="{{domain.logo_url}}" />
-                    <img class="media-object thumbnail" ng-hide="domain.logo_url != ''" data-src="holder.js/80x80/text:Logo Yok" />
-                
-                  </div>
-                  <div class="media-body">
-                    <h4 class="media-heading">{{domain.name}}</h4>
-                    ...
-                  </div>
-                </div>
+                    <div class="media">
+                      <div class="media-left">
+                        <img class="media-object thumbnail" ng-show="domain.logo_url != ''" ng-src="{{domain.logo_url}}" />
+                        <img class="media-object thumbnail" ng-hide="domain.logo_url != ''" data-src="holder.js/80x80/text:Logo yok" />
                     
+                      </div>
+                      <div class="media-body">
+                        <h2 class="media-heading">{{domain.name}} <small ng-show="domain.master_admin" class="text-muted"><i class="fa fa-lock"></i> Master Admin</small></h2>
+                        <div ng-show="domain.status != 'added' || domain.stage != 'added'">
+                            <span class="label label-danger">Alan adı doğrulanamadı</span>
+                        </div>
+                        <span class="label label-success" ng-show="domain.status === 'added' || domain.stage === 'added'">Alan adı bağlandı</span>
+                        <hr/>
+                        <ol>
+                            <li ng-show="domain.status != 'added'">Alan adı sahibi olduğunuzu doğrulayın
+                                <p>
+                                    Sitenin kök dizinine <b>8f7ac67f30a6.html</b> adlı dosyayı ve <b>afb132eb1265</b> metnini ekleyin
+                                </p>
+                                <p><small class="text-muted">veya</small></p>
+                                <p>
+                                    Alan adınıza bağlı <b>yamail-8f7ac67f30a6</b> alt alan adı için, CNAME kaydını mail.<b>yandex.com.tr</b> olarak ayarlayın.
+                                </p>
+                            </li>
+                        
+                            <li ng-show="domain.stage != 'added'">
+                                MX kayıtlarını ayarlayın
+                            </li>
+                        </ol>
+                      </div>
+                    </div>
+                    <div ng-show="domain.status === 'added' || domain.stage === 'added'">
+                        Mail listesi buraya gelecek
+                    </div>
                 </div>
             </div>
         </div>
