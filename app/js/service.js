@@ -14,6 +14,7 @@ var YandexMailApiService = angular.module('YandexMailApiService', ['ngResource']
 YandexMailApiService.factory('YandexMailApiService', ['$resource',
 function($resource){
   return $resource('api/:command/:action', {command: "@command", action: "@action"}, {
+    register_domain: {method:'POST', params: {command: "domain", action: "register"}, isArray: false},
     get_domains: {method:'POST', params: {command: "domain", action: "get_list"}, isArray: false},
     get_domain_registration_status: {method:'POST', params: {command: "domain", action: "status"}, isArray: false},
     get_domain_details: {method:'POST', params: {command: "domain", action: "details"}, isArray: false},

@@ -21,6 +21,20 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
     YandexMailApiService.get_domain_details({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.remote_details = result;});
   };
 
+  $scope.new_domain = "";
+  $scope.register_domain = function(){
+    if (!$scope.isValidDomain()) return;
+    YandexMailApiService.register_domain({domain: $scope.new_domain}, function(result){
+      console.log(result);
+    });
+  };
+
+  $scope.isValidDomain = function() { 
+    var domain = $scope.new_domain;
+    var re = new RegExp(/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/); 
+    return domain.match(re) && !_.contains(_.pluck($scope.domains, 'name'), domain);
+  };
+
   function getDomains(page, on_page) {
     if (!on_page) on_page = 20;
     if (!page) page = 1;

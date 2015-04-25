@@ -62,10 +62,10 @@
                     </a>
                 </div>
                 <div class="panel-body">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Eklemek için alan adı yazın..." />
+                    <div class="input-group" ng-class="{'has-error':(!isValidDomain() && new_domain.trim() != '')}">
+                        <input type="text" ng-model="new_domain" class="form-control" placeholder="Eklemek için alan adı yazın..." />
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button"><i class="fa fa-arrow-right"></i></button>
+                            <button class="btn btn-primary" ng-click="register_domain()" type="button"><i class="fa fa-arrow-right"></i></button>
                         </span>
                     </div>
                 </div>
@@ -93,11 +93,11 @@
                         <ol>
                             <li ng-show="domain.status != 'added'">Alan adı sahibi olduğunuzu doğrulayın
                                 <p>
-                                    Sitenin kök dizinine <b>8f7ac67f30a6.html</b> adlı dosyayı ve <b>afb132eb1265</b> metnini ekleyin
+                                    Sitenin kök dizinine <b>{{domain.remote_status.secrets.name}}.html</b> adlı dosyayı ve <b>{{domain.remote_status.secrets.content}}</b> metnini ekleyin
                                 </p>
                                 <p><small class="text-muted">veya</small></p>
                                 <p>
-                                    Alan adınıza bağlı <b>yamail-8f7ac67f30a6</b> alt alan adı için, CNAME kaydını mail.<b>yandex.com.tr</b> olarak ayarlayın.
+                                    Alan adınıza bağlı <b>yamail-{{domain.remote_status.secrets.name}}</b> alt alan adı için, CNAME kaydını mail.<b>yandex.com.tr</b> olarak ayarlayın.
                                 </p>
                             </li>
                         
