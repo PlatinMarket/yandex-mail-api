@@ -4,10 +4,10 @@
       {
         "type":"package",
         "package": {
-          "name": "zhzhussupovkz/yandex-mail-api",
-          "version":"1.0",
+          "name": "bdogan/yandex-mail-api",
+          "version":"0.2",
           "source": {
-              "url": "https://github.com/zhzhussupovkz/yandex-mail-api.git",
+              "url": "https://github.com/bdogan/yandex-mail-api.git",
               "type": "git",
               "reference":"master"
             }
@@ -15,9 +15,14 @@
       }
   ],
   "require": {
-    "zhzhussupovkz/yandex-mail-api": "1.0"
+    "bdogan/yandex-mail-api": "0.2"
   },
   "config": {
     "vendor-dir": "app/api/Vendor/"
+  },
+  "autoload": {
+    "psr-4": {
+      "YandexMail\\": "app/api/Vendor/bdogan/yandex-mail-api/YandexMail"
+    }
   }
 }

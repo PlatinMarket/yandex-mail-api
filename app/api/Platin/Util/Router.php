@@ -22,7 +22,8 @@ class Router {
     foreach (self::$routes as $pattern => $callback) {
       if (preg_match($pattern, self::$App->Request->get("path"), $params)) {
         array_shift($params);
-        return call_user_func_array($callback, array_merge(array(self::$App), array_values($params)));
+        $result = call_user_func_array($callback, array_merge(array(self::$App), array_values($params)));
+        if ($result !== false) return $result;
       }
     }
   }

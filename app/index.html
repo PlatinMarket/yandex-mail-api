@@ -30,13 +30,32 @@
 
     <!--Controllers-->
     <script src="controller/YandexMailApiController.js"></script>
+    
+    <style type="text/css">
+        .highlight {
+            font-weight: bold;
+        }
+    </style>
 
   </head>
 
   <body>
     <div class="container" ng-controller="YandexMailApiController">
       <div class="row">
-        Hello World
+        <div class="col-xs-3">
+            <input ng-model="domain_name" placeholder="Ara..." />
+            <i class="fa fa-spinner fa-spin" ng-show="domainsLoading"></i>
+            <ul>
+                <li ng-repeat="domain in domains | filter:domain_name:strict">
+                    <a href ng-click="selectDomain(domain)"><span ng-bind-html="highlight(domain.name, domain_name)">{{domain.name}}</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-9" ng-show="domain">
+            <img ng-src="{{domain.logo_url}}" err-src="http://google.com/favicon.ico" ng-hide="domain.queue > 0"/>
+            {{domain.name}}
+            <i class="fa fa-spinner fa-spin" ng-show="domain.queue > 0"></i>
+        </div>
       </div>
     </div>
 </html>

@@ -2,6 +2,8 @@
 
 function autoload($className) {
 
+    if (class_exists($className, false)) return false;  
+
     $className = ltrim($className, '\\');
     $fileName  = '';
     $namespace = '';
@@ -12,12 +14,7 @@ function autoload($className) {
     }
     $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
-    
-    if (class_exists($className, false)) {
-      return false;  
-    }
-    
-    require_once $fileName;
+    if (file_exists($fileName)) require_once $fileName;
 
 }
 spl_autoload_register('autoload');

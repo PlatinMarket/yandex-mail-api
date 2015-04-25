@@ -13,8 +13,11 @@ var YandexMailApiService = angular.module('YandexMailApiService', ['ngResource']
 
 YandexMailApiService.factory('YandexMailApiService', ['$resource',
 function($resource){
-  return $resource('logic/:command/:action', {}, {
-    domains: {method:'GET', params: { command: 'domain', action: 'index.php' }, isArray: true},
-    add_domain: {method:'POST', params: { command: 'domain', action: 'add.php' }, isArray: false}
+  return $resource('api/:command/:action', {command: "@command", action: "@action"}, {
+    get_domains: {method:'POST', params: {command: "domain", action: "get_list"}, isArray: false},
+    get_domain_registration_status: {method:'POST', params: {command: "domain", action: "status"}, isArray: false},
+    get_domain_details: {method:'POST', params: {command: "domain", action: "details"}, isArray: false},
+    get_domain_logo: {method:'POST', params: {command: "domain", action: "check_logo"}, isArray: false},
+    get_domain_mailbox: {method:'POST', params: {command: "email", action: "list"}, isArray: false}
   });
 }]);

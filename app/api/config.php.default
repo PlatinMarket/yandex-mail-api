@@ -1,0 +1,4 @@
+
+// Yandex Mail Config
+Platin\Lib\Configure::write("YandexMail.Token", "");
+Platin\Lib\Configure::write("YandexMail.Base", "xxx.xxx");

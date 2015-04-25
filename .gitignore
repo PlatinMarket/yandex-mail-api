@@ -8,3 +8,6 @@ tmp
 password_file.dat
 components/
 config.php
+composer.lock
+
+composer.lock
