@@ -53,7 +53,6 @@
                 </div>
                 <div class="list-group domains">
                     <a href class="list-group-item" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === '')}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">
-                        <span ng-bind-html="highlight(domain.name, domain_name)">{{domain.name}} </span>
                         <span class="badge">{{domain['emails-count']}}</span>
                         <span class="badge badge-danger" ng-show="domain.status != 'added'">MX</span>
                         <span class="badge badge-danger" ng-show="domain.stage != 'added'"><i class="fa fa-user"></i></span>
