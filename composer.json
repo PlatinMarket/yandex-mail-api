@@ -5,7 +5,7 @@
         "type":"package",
         "package": {
           "name": "bdogan/yandex-mail-api",
-          "version":"0.2",
+          "version":"0.5",
           "source": {
               "url": "https://github.com/bdogan/yandex-mail-api.git",
               "type": "git",
@@ -15,7 +15,7 @@
       }
   ],
   "require": {
-    "bdogan/yandex-mail-api": "0.2"
+    "bdogan/yandex-mail-api": "0.5"
   },
   "config": {
     "vendor-dir": "app/api/Vendor/"

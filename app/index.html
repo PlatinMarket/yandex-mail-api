@@ -52,7 +52,7 @@
                     <input type="search" class="form-control" ng-model="domain_name" placeholder="Ara..." />
                 </div>
                 <div class="list-group domains">
-                    <a href class="list-group-item" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === '')}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">
+                    <a href class="list-group-item" scroll-if="domain.name == active_domain_name" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === '')}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">
                         <span ng-bind-html="highlight(domain.name, domain_name)">{{domain.name}}</span>
                         <i class="fa fa-lock" ng-show="domain.master_admin"></i>
                         <span class="badge">{{domain['emails-count']}}</span>
@@ -63,9 +63,12 @@
                 </div>
                 <div class="panel-body">
                     <div class="input-group" ng-class="{'has-error':(!isValidDomain() && new_domain.trim() != '')}">
-                        <input type="text" ng-model="new_domain" class="form-control" placeholder="Eklemek için alan adı yazın..." />
+                        <input type="text" ng-disabled="domainAdding" ng-enter="register_domain()" ng-model="new_domain" class="form-control" placeholder="Eklemek için alan adı yazın..." />
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" ng-click="register_domain()" type="button"><i class="fa fa-arrow-right"></i></button>
+                            <button class="btn btn-primary" ng-click="register_domain()" type="button">
+                                <i ng-hide="domainAdding" class="fa fa-arrow-right"></i>
+                                <i ng-show="domainAdding" class="fa fa-cog fa-spin"></i>
+                            </button>
                         </span>
                     </div>
                 </div>
@@ -85,8 +88,7 @@
                                 {{domain.name}} 
                                 <small ng-show="domain.master_admin" class="text-muted"><i class="fa fa-lock"></i> Master Admin</small>
                                 <span class="pull-right" ng-hide="domain.master_admin">
-                                    <a href class="btn btn-xs btn-danger">Hesabı dondur</a>
-                                    <a href class="btn btn-xs btn-success">Hesabı başlat</a>
+                                    <a href class="btn btn-xs btn-danger" ng-click="deleteDomain(domain)">Hesabı sil</a>
                                 </span>
                             </h2>
                             <div ng-show="domain.status != 'added' || domain.stage != 'added'">
@@ -116,18 +118,23 @@
                     <div class="col col-xs-6">
                         <div class="panel panel-info domain-mails-list">
                             <div class="panel-heading">
-                                <h3 class="panel-title">E-posta hesapları <span class="badge pull-right">{{domain['emails-count']}} / {{domain['emails-max-count']}}</span></h3>
+                                <h3 class="panel-title">E-posta hesapları <span class="badge pull-right">{{domain.accounts.length}} / {{domain['emails-max-count']}}</span> <i class="fa fa-refresh fa-spin" ng-show="domain.accountsLoading"></i></h3>
                             </div>
                             <div class="panel-body">
-                                <input type="search" class="form-control" placeholder="Ara..." />
+                                <input type="search" ng-model="mail_address" class="form-control" placeholder="Ara..." />
                             </div>
                             <ul class="list-group">
-                                <li class="list-group-item" ng-repeat="domain in domains">
-                                    {{domain.name}}
+                                <li class="list-group-item" ng-repeat="account in domain.accounts | filter:mail_address:strict | orderBy: 'login'">
+                                    <span ng-bind-html="highlight(account.login, mail_address)">{{account.login}}</span>
                                     <span class="pull-right">
                                         <div class="btn-group btn-group-xs">
-                                            <a href class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                            <a href class="btn btn-default"><i class="fa fa-trash"></i></a>
+                                            <a href class="btn btn-default" ng-click="selectAccount(account)"><i class="fa fa-pencil"></i></a>
+                                            <a href class="btn btn-default">
+                                                <i class="fa fa-check" ng-click="changeAccountState(account, 'yes')" ng-show="account.enabled == 'no' && !account.changing_state"></i>
+                                                <i class="fa fa-exclamation" ng-click="changeAccountState(account, 'no')" ng-show="account.enabled == 'yes' && !account.changing_state"></i>
+                                                <i class="fa fa-gear fa-spin" ng-show="account.changing_state"></i>
+                                            </a>
+                                            <a href class="btn btn-default" ng-click="deleteAccount(account)"><i class="fa fa-trash"></i></a>
                                         </div>
                                     </span>
 
@@ -136,48 +143,46 @@
                         </div>
                     </div>
                     <div class="col col-xs-6">
-                        <div class="panel panel-success">
+                        <div class="panel panel-success" ng-show="account">
                             <div class="panel-heading">
                                 <h3 class="panel-title">E-posta hesabı düzenle</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="E-posta" />
-                                        <div class="input-group-addon">.{{domain.name}}</div>
-                                    </div>
+                                    <input type="text" class="form-control" placeholder="E-posta" ng-model="account.login" ng-disabled="true" />
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-xs-6">
-                                        <input type="password" class="form-control" placeholder="Şifre" />
+                                        <input type="password" ng-model="pass_new" class="form-control" placeholder="Şifre" />
                                     </div>
                                     <div class="form-group col-xs-6">
-                                        <input type="password" class="form-control" placeholder="Şifre tekrar" />
+                                        <input type="password" ng-model="pass_new_re" class="form-control" placeholder="Şifre tekrar" />
                                     </div>
                                 </div>
-                                <input type="submit" class="btn btn-block btn-success" value="Kaydet" />
+                                <input class="btn btn-block btn-success" ng-click="changeAccountPassword(account)" ng-disabled="account.changing_password" value="Kaydet" />
+                                <input class="btn btn-block btn-warning" ng-click="account=null" value="İptal" ng-disabled="account.changing_password" />
                             </div>
                         </div>
-                        <div class="panel panel-success">
+                        <div class="panel panel-success" ng-hide="account">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Yeni e-posta hesabı</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="E-posta" />
-                                        <div class="input-group-addon">.{{domain.name}}</div>
+                                        <input type="text" ng-model="login_name" class="form-control" placeholder="E-posta" />
+                                        <div class="input-group-addon">@{{domain.name}}</div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-xs-6">
-                                        <input type="password" class="form-control" placeholder="Şifre" />
+                                        <input type="password" ng-model="pass_new" class="form-control" placeholder="Şifre" />
                                     </div>
                                     <div class="form-group col-xs-6">
-                                        <input type="password" class="form-control" placeholder="Şifre tekrar" />
+                                        <input type="password" ng-model="pass_new_re" class="form-control" placeholder="Şifre tekrar" />
                                     </div>
                                 </div>
-                                <input type="submit" class="btn btn-block btn-success" value="Kaydet" />
+                                <input type="submit" class="btn btn-block btn-success" ng-click="addAccount(domain)" ng-disabled="domain.accountsLoading" value="Kaydet" />
                             </div>
                         </div>
                     </div>
