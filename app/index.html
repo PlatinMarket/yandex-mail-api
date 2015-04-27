@@ -46,7 +46,7 @@
         <div class="col-xs-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Alan adları <span class="badge pull-right">{{domains.length}}</span> <i class="fa fa-refresh fa-spin" ng-show="domainsLoading"></i>
+                    <h3 class="panel-title">Alan adları <span class="badge pull-right">{{domains.length}}</span> <i class="fa fa-refresh fa-spin" ng-show="domainsLoading"></i></h3>
                 </div>
                 <div class="panel-body">
                     <input type="search" class="form-control" ng-model="domain_name" placeholder="Ara..." />
@@ -71,44 +71,115 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-8">
+        <div class="col-xs-8" ng-class="{'domain-loading':domain.queue > 0}">
             <div class="panel panel-default" ng-show="domain">
-                <div class="panel-heading">
-                    Alan adı bilgileri <i class="fa fa-refresh fa-spin" ng-show="domain.queue > 0"></i>
-                </div>
                 <div class="panel-body">
                     <div class="media">
-                      <div class="media-left">
-                        <img class="media-object thumbnail" ng-show="domain.logo_url != ''" ng-src="{{domain.logo_url}}" />
-                        <img class="media-object thumbnail" ng-hide="domain.logo_url != ''" data-src="holder.js/80x80/text:Logo yok" />
-                    
-                      </div>
-                      <div class="media-body">
-                        <h2 class="media-heading">{{domain.name}} <small ng-show="domain.master_admin" class="text-muted"><i class="fa fa-lock"></i> Master Admin</small></h2>
-                        <div ng-show="domain.status != 'added' || domain.stage != 'added'">
-                            <span class="label label-danger">Alan adı doğrulanamadı</span>
+                        <div class="media-left">
+                            <img class="media-object thumbnail" ng-show="domain.logo_url != ''" ng-src="{{domain.logo_url}}" />
+                            <img class="media-object thumbnail" ng-hide="domain.logo_url != ''" data-src="holder.js/80x80/text:Logo yok" />
+
                         </div>
-                        <span class="label label-success" ng-show="domain.status === 'added' || domain.stage === 'added'">Alan adı bağlandı</span>
-                        <hr/>
-                        <ol>
+                        <div class="media-body">
+                            <h2 class="media-heading">
+                                {{domain.name}} 
+                                <small ng-show="domain.master_admin" class="text-muted"><i class="fa fa-lock"></i> Master Admin</small>
+                                <span class="pull-right" ng-hide="domain.master_admin">
+                                    <a href class="btn btn-xs btn-danger">Hesabı dondur</a>
+                                    <a href class="btn btn-xs btn-success">Hesabı başlat</a>
+                                </span>
+                            </h2>
+                            <div ng-show="domain.status != 'added' || domain.stage != 'added'">
+                                <span class="label label-danger">Alan adı doğrulanamadı</span>
+                            </div>
+                            <span class="label label-success" ng-show="domain.status === 'added' || domain.stage === 'added'">Alan adı bağlandı</span>
+                        </div>
+                        <ol class="domain-info" ng-show="domain.status != 'added' || domain.stage != 'added'">
                             <li ng-show="domain.status != 'added'">Alan adı sahibi olduğunuzu doğrulayın
                                 <p>
                                     Sitenin kök dizinine <b>{{domain.remote_status.secrets.name}}.html</b> adlı dosyayı ve <b>{{domain.remote_status.secrets.content}}</b> metnini ekleyin
                                 </p>
                                 <p><small class="text-muted">veya</small></p>
                                 <p>
-                                    Alan adınıza bağlı <b>yamail-{{domain.remote_status.secrets.name}}</b> alt alan adı için, CNAME kaydını mail.<b>yandex.com.tr</b> olarak ayarlayın.
+                                    Alan adınıza bağlı <b>yamail-{{domain.remote_status.secrets.name}}</b> alt alan adı için, CNAME kaydını <b>mail.yandex.com.tr</b> olarak ayarlayın.
                                 </p>
                             </li>
-                        
                             <li ng-show="domain.stage != 'added'">
                                 MX kayıtlarını ayarlayın
                             </li>
                         </ol>
-                      </div>
                     </div>
-                    <div ng-show="domain.status === 'added' || domain.stage === 'added'">
-                        Mail listesi buraya gelecek
+                </div>
+            </div>
+            <div class="domain-mails" ng-show="domain.status === 'added' || domain.stage === 'added'">
+                <div class="row">
+                    <div class="col col-xs-6">
+                        <div class="panel panel-info domain-mails-list">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">E-posta hesapları <span class="badge pull-right">{{domain['emails-count']}} / {{domain['emails-max-count']}}</span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <input type="search" class="form-control" placeholder="Ara..." />
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="domain in domains">
+                                    {{domain.name}}
+                                    <span class="pull-right">
+                                        <div class="btn-group btn-group-xs">
+                                            <a href class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                                            <a href class="btn btn-default"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </span>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col col-xs-6">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">E-posta hesabı düzenle</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="E-posta" />
+                                        <div class="input-group-addon">.{{domain.name}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <input type="password" class="form-control" placeholder="Şifre" />
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <input type="password" class="form-control" placeholder="Şifre tekrar" />
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-block btn-success" value="Kaydet" />
+                            </div>
+                        </div>
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Yeni e-posta hesabı</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="E-posta" />
+                                        <div class="input-group-addon">.{{domain.name}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-xs-6">
+                                        <input type="password" class="form-control" placeholder="Şifre" />
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <input type="password" class="form-control" placeholder="Şifre tekrar" />
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-block btn-success" value="Kaydet" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
