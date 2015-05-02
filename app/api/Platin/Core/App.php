@@ -15,6 +15,5 @@ class App {
     $this->Configure = new Configure();
   }
 
-
 }
 

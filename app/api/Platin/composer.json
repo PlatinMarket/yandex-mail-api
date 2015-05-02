@@ -4,7 +4,13 @@
     "brandonwamboldt/utilphp": "1.0.*",
     "simplon/mysql": "*"
   },
+
   "config": {
     "vendor-dir": "Vendor/"
+  },
+  "autoload": {
+    "psr-4": {
+      "PlatinBox\\": "Vendor/PlatinMarket/platinbox-openid/src"
+    }
   }
 }

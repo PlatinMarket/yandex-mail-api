@@ -1,7 +1,6 @@
 'use strict';
 
 /* App Module */
-
 var YandexMailApi = angular.module('YandexMailApi', [
   'YandexMailApiService'
 ]);
