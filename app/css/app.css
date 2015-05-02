@@ -1,9 +1,10 @@
-.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
-  outline: none;
+.navbar-brand img{
+  display:inline-block;
+  height: 20px;
 }
 
-.container{
-  margin-top:15px;
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+  outline: none;
 }
 
 .domains{
