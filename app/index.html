@@ -68,7 +68,7 @@
                     <input type="search" class="form-control" ng-model="domain_name" placeholder="Ara..." />
                 </div>
                 <div class="list-group domains">
-                    <a href class="list-group-item" scroll-if="domain.name == active_domain_name" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === '')}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">
+                    <a href class="list-group-item" scroll-if="domain.name == active_domain_name" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === ''), active: domain.selected}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">
                         <span ng-bind-html="highlight(domain.name, domain_name)">{{domain.name}}</span>
                         <i class="fa fa-lock" ng-show="domain.master_admin"></i>
                         <span class="badge">{{domain['emails-count']}}</span>

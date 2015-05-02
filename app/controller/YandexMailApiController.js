@@ -17,6 +17,8 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
   $scope.domain = null;
   $scope.selectDomain = function(domain) {
     if ($scope.domain != null && $scope.domain.name == domain.name) return;
+    if ($scope.domain != null) $scope.domain.selected = false;
+    domain.selected = true;
     $scope.domain = domain;
     $scope.account = null;
     $scope.domain.accounts = [];
