@@ -32,7 +32,8 @@ YandexMailApiService.factory('YandexMailApiService', ['$resource',
         get_mailbox_counters: {method:'POST', params: {command: "mailbox", action: "counters"}, isArray: false},
         set_mailbox: {method:'POST', params: {command: "mailbox", action: "edit"}, isArray: false},
         add_mailbox: {method:'POST', params: {command: "mailbox", action: "add"}, isArray: false},
-        del_mailbox: {method:'POST', params: {command: "mailbox", action: "del"}, isArray: false}
+        del_mailbox: {method:'POST', params: {command: "mailbox", action: "del"}, isArray: false},
+        logged_user: {method:'GET', params: {command: "logged", action: "user"}, isArray: false}
       });
     }
 ]);

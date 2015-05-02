@@ -40,7 +40,7 @@
 
   </head>
 
-  <body>
+  <body ng-controller="YandexMailApiController">
     <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
@@ -50,14 +50,14 @@
             </a>
         </div>
         <div class="collapse navbar-collapse">
-            <div class="navbar-nav navbar-right">
-                <p class="navbar-text">Hoşgeldin, <strong>asasd</strong></p>
-                <a class="btn btn-sm btn-default navbar-btn">Çıkış</a>
+            <div class="navbar-nav navbar-right" ng-show="loginState">
+                <p class="navbar-text">Hoşgeldin, <strong>{{user.fullname}}</strong></p>
+                <a class="btn btn-sm btn-default navbar-btn" ng-click="logout()">Çıkış</a>
             </div>
         </div>
       </div>
     </nav>    
-    <div class="container" ng-controller="YandexMailApiController">
+    <div class="container">
       <div class="row">
         <div class="col-xs-4">
             <div class="panel panel-default">

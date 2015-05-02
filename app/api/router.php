@@ -15,6 +15,12 @@ Platin\Util\Router::route('/logout', function($App){
 });
 
 // Logout Router
+Platin\Util\Router::route('/logged/user', function($App){
+  header('Content-Type: application/json');
+  echo json_encode(PlatinBox\OpenId::user());
+});
+
+// Logout Router
 Platin\Util\Router::route('/(.*?)', function($App){
   if (PlatinBox\OpenId::logged()) return false; 
   

@@ -7,6 +7,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
   $scope.domains = [];
   $scope.domainsLoading = true;
   $scope.loginState = false;
+  $scope.user = YandexMailApiService.logged_user();
 
   $scope.highlight = function(text, search) {
     if (!search) return $sce.trustAsHtml(text);
@@ -69,6 +70,10 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
       }
       for (var key in result.account) account[key] = result.account[key];
     });
+  };
+
+  $scope.logout = function(){
+    window.location = "api/logout";
   };
 
   function getMailbox(page, domain, on_page){
