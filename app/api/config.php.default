@@ -1,4 +1,12 @@
+<?php
 
 // Yandex Mail Config
 Platin\Lib\Configure::write("YandexMail.Token", "");
 Platin\Lib\Configure::write("YandexMail.Base", "xxx.xxx");
+
+// OpenId Config
+Platin\Lib\Configure::write("Openid.Server", "");
+Platin\Lib\Configure::write("Openid.MemberOf", "");
+
+// Local Security Allow
+Platin\Lib\Configure::write("Security.Allow", "192.168");

@@ -1,11 +1,12 @@
 <?php
 
-PlatinBox\OpenId::SetOpenId("https://openid.platinbox.org");
-PlatinBox\OpenId::setRequiredMember("Super Admin");
+PlatinBox\OpenId::SetOpenId(Platin\Lib\Configure::read("Openid.Server"));
+PlatinBox\OpenId::setRequiredMember(Platin\Lib\Configure::read("Openid.MemberOf"));
 
 // Login Router
 Platin\Util\Router::route('/login', function($App){
-  if (PlatinBox\OpenId::login() === false || PlatinBox\OpenId::logged() === true) header('Location: ../index.html');
+  if (!Platin\Lib\Configure::read("Security.Allow")) Platin\Lib\Configure::write("Security.Allow", "@@@");
+  if ((PlatinBox\OpenId::login() === false || PlatinBox\OpenId::logged() === true) && strpos($App->Request->clientIp(), Platin\Lib\Configure::read("Security.Allow")) === false) header('Location: ../index.html');
 });
 
 // Logout Router
@@ -28,12 +29,7 @@ Platin\Util\Router::route('/(.*?)', function($App){
 
   if ($App->Request->isAjax()){
     header('Content-Type: application/json');
-    echo json_encode(
-      array(
-        "code" => 401,
-        "message" => "Unauthorized"
-      )
-    );
+    echo json_encode(array("code" => 401, "message" => "Unauthorized"));
     return;
   }
   
