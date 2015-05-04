@@ -17,7 +17,11 @@ Platin\Util\Router::route('/logout', function($App){
 // Logout Router
 Platin\Util\Router::route('/logged/user', function($App){
   header('Content-Type: application/json');
-  echo json_encode(PlatinBox\OpenId::user());
+  if (strpos($App->Request->clientIp(), Platin\Lib\Configure::read("Security.Allow")) !== false) {
+    echo json_encode(array("email" => "", "fullname" => "Güvenilir Kullanıcı", "memberof" => "", "nickname" => "trusted_user", "uid" => "trusted_user"));
+  } else {
+    echo json_encode(PlatinBox\OpenId::user());
+  }
 });
 
 // Logout Router

@@ -50,7 +50,7 @@
             </a>
         </div>
         <div class="collapse navbar-collapse">
-            <div class="navbar-nav navbar-right" ng-show="loginState">
+            <div class="navbar-nav navbar-right" ng-show="loginState && user.uid !== 'trusted_user'">
                 <p class="navbar-text">Hoşgeldin, <strong>{{user.fullname}}</strong></p>
                 <a class="btn btn-sm btn-default navbar-btn" ng-click="logout()">Çıkış</a>
             </div>
