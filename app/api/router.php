@@ -5,8 +5,7 @@ PlatinBox\OpenId::setRequiredMember(Platin\Lib\Configure::read("Openid.MemberOf"
 
 // Login Router
 Platin\Util\Router::route('/login', function($App){
-  if (!Platin\Lib\Configure::read("Security.Allow")) Platin\Lib\Configure::write("Security.Allow", "@@@");
-  if ((PlatinBox\OpenId::login() === false || PlatinBox\OpenId::logged() === true) && strpos($App->Request->clientIp(), Platin\Lib\Configure::read("Security.Allow")) === false) header('Location: ../index.html');
+  if (PlatinBox\OpenId::login() === false || PlatinBox\OpenId::logged() === true) header('Location: ../index.html');
 });
 
 // Logout Router
@@ -23,7 +22,8 @@ Platin\Util\Router::route('/logged/user', function($App){
 
 // Logout Router
 Platin\Util\Router::route('/(.*?)', function($App){
-  if (PlatinBox\OpenId::logged()) return false; 
+  if (!Platin\Lib\Configure::read("Security.Allow")) Platin\Lib\Configure::write("Security.Allow", "@@@");
+  if (PlatinBox\OpenId::logged() || strpos($App->Request->clientIp(), Platin\Lib\Configure::read("Security.Allow")) !== false) return false; 
   
   http_response_code(401);
 
@@ -70,7 +70,7 @@ Platin\Util\Router::route('/(.*?)/(.*?)', function($App, $command, $action){
 // Default Page
 Platin\Util\Router::route('/', function(){
   header("Content-Type: text/plain");
-  echo "Yandex Mail Apia";
+  echo "Yandex Mail Api";
   return "asdasd";
 });
 
