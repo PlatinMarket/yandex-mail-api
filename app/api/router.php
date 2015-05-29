@@ -17,7 +17,7 @@ Platin\Util\Router::route('/logout', function($App){
 // Logout Router
 Platin\Util\Router::route('/logged/user', function($App){
   header('Content-Type: application/json');
-  if (strpos($App->Request->clientIp(), Platin\Lib\Configure::read("Security.Allow")) !== false) {
+  if (strpos($App->Request->clientIp(), Platin\Lib\Configure::read("Security.Allow")) !== false || $App->Request->fromLocal()) {
     echo json_encode(array("email" => "", "fullname" => "Güvenilir Kullanıcı", "memberof" => "", "nickname" => "trusted_user", "uid" => "trusted_user"));
   } else {
     echo json_encode(PlatinBox\OpenId::user());
@@ -27,6 +27,7 @@ Platin\Util\Router::route('/logged/user', function($App){
 // Logout Router
 Platin\Util\Router::route('/(.*?)', function($App){
   if (!Platin\Lib\Configure::read("Security.Allow")) Platin\Lib\Configure::write("Security.Allow", "@@@");
+  if ($App->Request->fromLocal()) return false;
   if (PlatinBox\OpenId::logged() || strpos($App->Request->clientIp(), Platin\Lib\Configure::read("Security.Allow")) !== false) return false; 
   
   http_response_code(401);

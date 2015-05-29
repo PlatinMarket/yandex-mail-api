@@ -27,6 +27,11 @@ class Request {
     return null;
   }
 
+  public function fromLocal(){
+    if (!isset($_SERVER['LOCAL_ADDR'])) return $_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'];
+    return ($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] || $_SERVER['LOCAL_ADDR'] == $_SERVER['REMOTE_ADDR']);
+  }
+
   private function _parseQuery(){
     return $_GET; //must more secure
   }
