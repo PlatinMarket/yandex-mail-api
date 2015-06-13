@@ -26,8 +26,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
     domain.queue = 2;
     YandexMailApiService.get_domain_registration_status({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.remote_status = result;});
     YandexMailApiService.get_domain_details({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.remote_details = result;});
-    if (domain.stage != "added" || domain.status != "added") return;
-    getMailbox(1, domain.name);
+    if (domain.status == "added" || domain.status == "mx-activate") getMailbox(1, domain.name);
   };
 
   $scope.account = null;
@@ -44,7 +43,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
   $scope.addAccount = function(domain){
     if (!$scope.isValidPasswords() || !validateEmail($scope.login_name + "@" + domain.name) || $scope.login_name.trim() == "" || _.contains(_.pluck($scope.domain.accounts, 'login'), $scope.login_name + "@" + domain.name)) return;
     $scope.domain.accountsLoading = true;
-    YandexMailApiService.add_mailbox({domain: domain.name, login: $scope.login_name, password: $scope.pass_new}, function(result){ 
+    YandexMailApiService.add_mailbox({domain: domain.name, login: $scope.login_name, password: $scope.pass_new}, function(result){
       $scope.domain.accountsLoading = false;
       if (result.success != "ok") {
         sweetAlert("Error", ParseError(result.error), "error");
@@ -117,7 +116,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
       $scope.domainsLoading = true;
       var $button = $(".confirm.btn.btn-lg.btn-primary");
       $button.attr("disabled", "disabled");
-      
+
       YandexMailApiService.del_domain({domain: domain.name}, function(result){
         $button.removeAttr("disabled");
 
@@ -126,7 +125,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
           sweetAlert("Error", ParseError(result.error), "error");
           return;
         }
-        swal({title: "Silindi!", text: "Domain \'" + domain.name + "\' başarıyla silindi!", type: "success", confirmButtonText: "Tamam"}); 
+        swal({title: "Silindi!", text: "Domain \'" + domain.name + "\' başarıyla silindi!", type: "success", confirmButtonText: "Tamam"});
         if ($scope.domain.name == domain.name) $scope.removeDomain();
         $scope.domains.splice(index, 1);
       });
@@ -140,7 +139,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
       $scope.domain.accountsLoading = true;
       var $button = $(".confirm.btn.btn-lg.btn-primary");
       $button.attr("disabled", "disabled");
-      
+
       YandexMailApiService.del_mailbox({domain: $scope.domain.name, uid: account.uid}, function(result){
         $button.removeAttr("disabled");
         $scope.domain.accountsLoading = false;
@@ -148,7 +147,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
           sweetAlert("Error", ParseError(result.error), "error");
           return;
         }
-        swal({title: "Silindi!", text: "Domain \'" + account.login + "\' başarıyla silindi!", type: "success", confirmButtonText: "Tamam"}); 
+        swal({title: "Silindi!", text: "Domain \'" + account.login + "\' başarıyla silindi!", type: "success", confirmButtonText: "Tamam"});
         if ($scope.account && $scope.account.login == account.login) {
           $scope.account = undefined;
           $scope.pass_new = "";
@@ -191,9 +190,9 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
     return $scope.pass_new.trim() != "" && $scope.pass_new_re.trim() != "" && $scope.pass_new == $scope.pass_new_re;
   };
 
-  $scope.isValidDomain = function() { 
+  $scope.isValidDomain = function() {
     var domain = $scope.new_domain;
-    var re = new RegExp(/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/); 
+    var re = new RegExp(/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/);
     return domain.match(re) && !_.contains(_.pluck($scope.domains, 'name'), domain);
   };
 
@@ -251,6 +250,5 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
         return "Undefined error: \"" + errStr + "\"";
     }
   }
-  
-});
 
+});

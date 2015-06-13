@@ -16,7 +16,7 @@
     <!--Angular Modules-->
     <script src="components/angular-animate/angular-animate.js"></script>
     <script src="components/angular-resource/angular-resource.js"></script>
-    
+
     <!--3rd Party Javascript-->
     <script src="components/jquery/dist/jquery.js"></script>
     <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -31,7 +31,7 @@
 
     <!--Controllers-->
     <script src="controller/YandexMailApiController.js?v0.1"></script>
-    
+
     <style type="text/css">
         .highlight {
             font-weight: bold;
@@ -56,7 +56,7 @@
             </div>
         </div>
       </div>
-    </nav>    
+    </nav>
     <div class="container">
       <div class="row">
         <div class="col-xs-4">
@@ -70,9 +70,8 @@
                 <div class="list-group domains">
                     <a href class="list-group-item" scroll-if="domain.name == active_domain_name" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === ''), active: domain.selected}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">
                         <span ng-bind-html="highlight(domain.name, domain_name)">{{domain.name}}</span>
-                        <i class="fa fa-lock" ng-show="domain.master_admin"></i>
                         <span class="badge">{{domain['emails-count']}}</span>
-                        <span class="badge badge-danger" ng-show="domain.status != 'added'">MX</span>
+                        <span class="badge badge-danger" ng-show="domain.status == 'mx-activate'">MX</span>
                         <span class="badge badge-danger" ng-show="domain.stage != 'added'"><i class="fa fa-user"></i></span>
                         <span class="badge badge-danger" ng-show="domain.logo_url === ''"><i class="fa fa-picture-o"></i></span>
                     </a>
@@ -101,19 +100,18 @@
                         </div>
                         <div class="media-body">
                             <h2 class="media-heading">
-                                {{domain.name}} 
-                                <small ng-show="domain.master_admin" class="text-muted"><i class="fa fa-lock"></i> Master Admin</small>
+                                {{domain.name}}
                                 <span class="pull-right" ng-hide="domain.master_admin">
                                     <a href class="btn btn-xs btn-danger" ng-click="deleteDomain(domain)">Hesabı sil</a>
                                 </span>
                             </h2>
-                            <div ng-show="domain.status != 'added' || domain.stage != 'added'">
+                            <div ng-hide="domain.status == 'added' || domain.status == 'mx-activate'">
                                 <span class="label label-danger">Alan adı doğrulanamadı</span>
                             </div>
-                            <span class="label label-success" ng-show="domain.status === 'added' || domain.stage === 'added'">Alan adı bağlandı</span>
+                            <span class="label label-success" ng-show="domain.status == 'added' || domain.status == 'mx-activate'">Alan adı bağlandı</span>
                         </div>
-                        <ol class="domain-info" ng-show="domain.status != 'added' || domain.stage != 'added'">
-                            <li ng-show="domain.status != 'added'">Alan adı sahibi olduğunuzu doğrulayın
+                        <ol class="domain-info" ng-hide="domain.status == 'added' || domain.status == 'mx-activate'">
+                            <li ng-hide="domain.status == 'added' || domain.status == 'mx-activate'">Alan adı sahibi olduğunuzu doğrulayın
                                 <p>
                                     Sitenin kök dizinine <b>{{domain.remote_status.secrets.name}}.html</b> adlı dosyayı ve <b>{{domain.remote_status.secrets.content}}</b> metnini ekleyin
                                 </p>
@@ -122,14 +120,14 @@
                                     Alan adınıza bağlı <b>yamail-{{domain.remote_status.secrets.name}}</b> alt alan adı için, CNAME kaydını <b>mail.yandex.com.tr</b> olarak ayarlayın.
                                 </p>
                             </li>
-                            <li ng-show="domain.stage != 'added'">
+                            <li ng-hide="domain.status == 'added' || domain.status == 'mx-activate'">
                                 MX kayıtlarını ayarlayın
                             </li>
                         </ol>
                     </div>
                 </div>
             </div>
-            <div class="domain-mails" ng-show="domain.status === 'added' || domain.stage === 'added'">
+            <div class="domain-mails" ng-show="domain.status == 'added' || domain.status == 'mx-activate'">
                 <div class="row">
                     <div class="col col-xs-6">
                         <div class="panel panel-info domain-mails-list">
