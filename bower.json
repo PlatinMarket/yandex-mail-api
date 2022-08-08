@@ -4,14 +4,14 @@
   "dependencies": {
     "jquery": "1.x",
     "bootstrap": "3.x",
-    "fontawesome": "x",
+    "fontawesome": "4.3.0",
     "angular": "1.3.x",
     "angular-resource": "1.3.x",
     "angular-animate": "1.3.x",
     "animate.css": "3.x",
     "underscore": "1.x",
     "moment": "2.x",
-    "bootstrap-sweetalert": "x",
-    "holderjs": "x"
+    "bootstrap-sweetalert": "0.4.2",
+    "holderjs": "2.6.0"
   }
 }
