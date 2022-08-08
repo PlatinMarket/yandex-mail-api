@@ -106,7 +106,7 @@
                         <div class="media-body">
                             <h2 class="media-heading">
                                 {{domain.name}}
-                                <span class="pull-right" ng-hide="domain.master_admin">
+                                <span class="pull-right" ng-hide="true || !domain.master_admin">
                                     <a href class="btn btn-xs btn-danger" ng-click="deleteDomain(domain)">Domain'i tamamen sil</a>
                                 </span>
                             </h2>
