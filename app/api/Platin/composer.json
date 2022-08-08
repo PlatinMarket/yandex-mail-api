@@ -1,5 +1,4 @@
 {
-  "name": "Platin",
   "require": {
     "brandonwamboldt/utilphp": "1.0.*",
     "simplon/mysql": "*"

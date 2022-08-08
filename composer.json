@@ -1,5 +1,4 @@
 {
-  "name": "platin-server-center-api",
   "repositories": [
       {
         "type":"package",
@@ -28,7 +27,7 @@
   ],
   "require": {
     "bdogan/yandex-mail-api": "0.5",
-    "PlatinMarket/platinbox-openid": "0.7"
+    "platinmarket/platinbox-openid": "0.7"
   },
   "config": {
     "vendor-dir": "app/api/Vendor/"
