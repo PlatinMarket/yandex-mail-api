@@ -64,8 +64,13 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Alan adları <span class="badge pull-right">{{domains.length}}</span> <i class="fa fa-refresh fa-spin" ng-show="domainsLoading"></i></h3>
                 </div>
-                <div class="panel-body">
-                    <input type="search" class="form-control" ng-model="domain_name" placeholder="Ara..." />
+		<div class="panel-body">
+		   <select ng-model="token" class="form-control">
+                       <option ng-repeat="t in tokens" [value]="t" [selected]="t == token">{{t}}</option>
+		   </select>
+		</div>
+		<div class="panel-body">
+		    <input type="search" class="form-control" ng-model="domain_name" placeholder="Ara..." />
                 </div>
                 <div class="list-group domains">
                     <a href class="list-group-item" scroll-if="domain.name == active_domain_name" ng-class="{'list-group-item-warning': (domain.status != 'added' || domain.stage != 'added' || domain.logo_url === ''), active: domain.selected}" ng-repeat="domain in domains | filter:domain_name:strict | orderBy: 'name'" ng-click="selectDomain(domain)">

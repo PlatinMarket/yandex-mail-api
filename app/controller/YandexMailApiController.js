@@ -24,8 +24,8 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
     $scope.domain.accounts = [];
     $scope.domain.accountsLoading = true;
     domain.queue = 2;
-    YandexMailApiService.get_domain_registration_status({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.remote_status = result;});
-    YandexMailApiService.get_domain_details({domain: domain.name}, function(result){ domain.queue = domain.queue - 1; $scope.domain.remote_details = result;});
+    YandexMailApiService.get_domain_registration_status({ token: $scope.token, domain: domain.name }, function (result) { domain.queue = domain.queue - 1; $scope.domain.remote_status = result; });
+    YandexMailApiService.get_domain_details({ token: $scope.token, domain: domain.name }, function (result) { domain.queue = domain.queue - 1; $scope.domain.remote_details = result; });
     if (domain.status == "added" || domain.status == "mx-activate") getMailbox(1, domain.name);
   };
 
@@ -36,14 +36,14 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
     $scope.login_name = "";
     if ($scope.account != null && $scope.account.login == account.login) return;
     $scope.account = account;
-    YandexMailApiService.get_mailbox_counters({domain: $scope.domain.name, login: account.login, uid: account.uid}, function(result){ $scope.account.counters = result;});
+    YandexMailApiService.get_mailbox_counters({ token: $scope.token, domain: $scope.domain.name, login: account.login, uid: account.uid }, function (result) { $scope.account.counters = result; });
   };
 
   $scope.login_name = "";
   $scope.addAccount = function(domain){
     if (!$scope.isValidPasswords() || !validateEmail($scope.login_name + "@" + domain.name) || $scope.login_name.trim() == "" || _.contains(_.pluck($scope.domain.accounts, 'login'), $scope.login_name + "@" + domain.name)) return;
     $scope.domain.accountsLoading = true;
-    YandexMailApiService.add_mailbox({domain: domain.name, login: $scope.login_name, password: $scope.pass_new}, function(result){
+    YandexMailApiService.add_mailbox({ token: $scope.token, domain: domain.name, login: $scope.login_name, password: $scope.pass_new }, function (result) {
       $scope.domain.accountsLoading = false;
       if (result.success != "ok") {
         sweetAlert("Error", ParseError(result.error), "error");
@@ -62,7 +62,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
 
   $scope.changeAccountState = function(account, new_state) {
     account.changing_state = true;
-    YandexMailApiService.set_mailbox({domain: $scope.domain.name, uid: account.uid, params: {enabled: new_state}}, function(result){
+    YandexMailApiService.set_mailbox({ token: $scope.token, domain: $scope.domain.name, uid: account.uid, params: { enabled: new_state } }, function (result) {
       account.changing_state = false;
       if (result.success != "ok") {
         sweetAlert("Error", ParseError(result.error), "error");
@@ -80,7 +80,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
   function getMailbox(page, domain, on_page){
     if (!on_page) on_page = 20;
     if (!page) page = 1;
-    YandexMailApiService.get_domain_mailbox({domain: domain, page: page, on_page: on_page}, function(result){
+    YandexMailApiService.get_domain_mailbox({ token: $scope.token, domain: domain, page: page, on_page: on_page }, function (result) {
       $scope.domain.accounts.push.apply($scope.domain.accounts, result.accounts);
       if ($scope.domain.accounts.length < result.total) return getMailbox(page + 1, domain);
       $scope.domain.accountsLoading = false;
@@ -93,7 +93,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
     if (!$scope.isValidDomain() || $scope.domainAdding) return;
     $scope.domainAdding = true;
     $scope.domainsLoading = true;
-    YandexMailApiService.register_domain({domain: $scope.new_domain}, function(result){
+    YandexMailApiService.register_domain({ token: $scope.token, domain: $scope.new_domain }, function (result) {
       $scope.domainsLoading = false;
       if (result.success != "ok") {
         sweetAlert("Error", ParseError(result.error), "error");
@@ -117,7 +117,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
       var $button = $(".confirm.btn.btn-lg.btn-primary");
       $button.attr("disabled", "disabled");
 
-      YandexMailApiService.del_domain({domain: domain.name}, function(result){
+      YandexMailApiService.del_domain({ token: $scope.token, domain: domain.name }, function (result) {
         $button.removeAttr("disabled");
 
         $scope.domainsLoading = false;
@@ -140,7 +140,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
       var $button = $(".confirm.btn.btn-lg.btn-primary");
       $button.attr("disabled", "disabled");
 
-      YandexMailApiService.del_mailbox({domain: $scope.domain.name, uid: account.uid}, function(result){
+      YandexMailApiService.del_mailbox({ token: $scope.token, domain: $scope.domain.name, uid: account.uid }, function (result) {
         $button.removeAttr("disabled");
         $scope.domain.accountsLoading = false;
         if (result.success != "ok") {
@@ -169,7 +169,7 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
   $scope.changeAccountPassword = function(account){
     if (!$scope.isValidPasswords()) return;
     account.changing_password = true;
-    YandexMailApiService.set_mailbox({domain: $scope.domain.name, uid: account.uid, params: {password: $scope.pass_new}}, function(result){
+    YandexMailApiService.set_mailbox({ token: $scope.token, domain: $scope.domain.name, uid: account.uid, params: { password: $scope.pass_new } }, function (result) {
       account.changing_password = false;
       if (result.success != "ok") {
         sweetAlert("Error", ParseError(result.error), "error");
@@ -204,14 +204,31 @@ YandexMailApi.controller('YandexMailApiController', function ($scope, $sce, Yand
   function getDomains(page, on_page) {
     if (!on_page) on_page = 20;
     if (!page) page = 1;
-    YandexMailApiService.get_domains({page: page, on_page: on_page}, function(result){
+    YandexMailApiService.get_domains({ token: $scope.token, page: page, on_page: on_page }, function (result) {
       $scope.loginState = true;
       $scope.domains.push.apply($scope.domains, result.domains);
       if ($scope.domains.length < result.total) return getDomains(page + 1);
       $scope.domainsLoading = false;
     });
   }
-  getDomains(1);
+
+  $scope.token = null;
+  $scope.tokens = [];
+  function getTokens() {
+    YandexMailApiService.get_tokens({}, function (result) {
+
+      result.forEach(item => $scope.tokens.push(item));
+      if ($scope.token == null && $scope.tokens.length !== 0) $scope.token = $scope.tokens[0];
+    });
+  }
+
+  $scope.$watch("token", function () {
+    $scope.domains = [];
+    $scope.domain = null;
+    getDomains(1);
+  });
+
+  getTokens();
 
   function Domain(register_response) {
     this.aliases = [];
