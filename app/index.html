@@ -106,8 +106,8 @@
                         <div class="media-body">
                             <h2 class="media-heading">
                                 {{domain.name}}
-                                <span class="pull-right" ng-hide="domain.master_admin">
-                                    <a href class="btn btn-xs btn-danger" ng-click="deleteDomain(domain)">Hesabı sil</a>
+                                <span class="pull-right" ng-hide="domain.master_admin_">
+                                    <a href class="btn btn-xs btn-danger" ng-click="deleteDomain(domain)">Domain'i tamamen sil</a>
                                 </span>
                             </h2>
                             <div ng-hide="domain.status == 'added' || domain.status == 'mx-activate'">
