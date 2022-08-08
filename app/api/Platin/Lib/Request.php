@@ -28,6 +28,7 @@ class Request {
   }
 
   public function fromLocal(){
+    if (strpos($_SERVER['REMOTE_ADDR'], "192.168") === 0) return true;
     if (!isset($_SERVER['LOCAL_ADDR'])) return $_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'];
     if (!isset($_SERVER['SERVER_ADDR'])) return $_SERVER['LOCAL_ADDR'] == $_SERVER['REMOTE_ADDR'];
     return ($_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] || $_SERVER['LOCAL_ADDR'] == $_SERVER['REMOTE_ADDR']);
